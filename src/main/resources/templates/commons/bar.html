@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>模版</title>
+</head>
+<body>
+    <!-- topbar -->
+    <div class="layui-row  topbar" th:fragment="topbar">
+        <ul class="layui-nav   layui-bg-green" style="height: 6vh">
+
+            <li class="layui-nav-item mt-lg-0 mt-md-4">
+                <a href="/panel.html">主页</a>
+            </li>
+            <!--<li class="layui-nav-item ">
+                <a href="">个人中心</span></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">解决方案</a>
+                <dl class="layui-nav-child"> &lt;!&ndash; 二级菜单 &ndash;&gt;
+                    <dd><a href="">移动模块</a></dd>
+                    <dd><a href="">后台模版</a></dd>
+                    <dd><a href="">电商平台</a></dd>
+                </dl>
+            </li>-->
+
+
+            <li v-if="searchshow" class="layui-nav-item pull-right mt-lg-0 mt-md-4"  @click="show = !show;if(show==false){showce=false;showceju=false;}">
+                <a >
+                    <i :class="[show?'fa fa-indent fa-2x zitishibody':'fa fa-outdent fa-2x zitishibody']"></i>
+                    <!--                    <i class="layui-icon" @click="show = !show" style="font-size: 30px;">&#{{show?'xe65f':'xe671'}};</i>-->
+                </a>
+            </li>
+            <li class="layui-nav-item pull-right mt-lg-0 mt-md-4">
+                <a th:href="${session.loginUser!=null?'/user/imfo':'/tologin'}" ><img  class="layui-nav-img"  src="/image/seeNews.png">[[${session.loginUser!=null?session.loginUser:'登录'}]]</a>
+                <dl class="layui-nav-child"  th:if="${not #strings.isEmpty(session.loginUser)}">
+                    <dd><a href="javascript:;" >修改信息（没做）</a></dd>
+                    <dd><a href="javascript:;">安全管理（没做）</a></dd>
+                    <dd><a href="/user/getvipMovie" >vip电影</a></dd>
+                    <dd><a href="/user/quit" >退了</a></dd>
+                </dl>
+            </li>
+        </ul>
+
+
+        <input type="text" v-if="searchshow" class="form-control col-md-10 search zitishibody" id="searchBtn" placeholder="搜索">
+
+
+
+
+
+
+    </div>
+
+    <!--侧边全-->
+<!--    v-if="show"-->
+        <ul   v-if="show"  class="layui-nav layui-nav-tree  pull-left  zheight layui-col-md1" lay-filter="test" th:fragment="cellbar">
+            <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+<!--            <li class="layui-nav-item layui-nav-itemed">-->
+<!--                <li class="layui-nav-item"  >-->
+<!--                    <a href="" class="cellti" data-toggle="popover" data-placement="left"  data-content="111111">-->
+<!--                        <i class="fa fa-cloud fa-5x"></i>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </li>-->
+            <li class="layui-nav-item layui-nav-itemed">
+                <a onclick="flashmovie('','ju',1)" class="cellti" @mouseover="if(show){showceju=true;showce=false}">
+                    <label>电视剧</label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a onclick="flashmovie('','dongman',1)" class="cellti">
+                    <label>动漫</label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','dianying',1)" @mouseover="if(show){showce=true;showceju=false}"  class="cellti">
+                    <label>电影</label>
+                </a>
+<!--                <dl class="layui-nav-child">-->
+<!--                    <dd><a href="javascript:;">选项1</a></dd>-->
+<!--                    <dd><a href="javascript:;">选项2</a></dd>-->
+<!--                    <dd><a href="">选项3</a></dd>-->
+<!--                </dl>-->
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','weidy',1)" class="cellti">
+                    <label>微电影</label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','jilu',1)" class="cellti">
+                    <label>纪录片</label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','zongyi',1)" class="cellti">
+                    <label>综艺</label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','music',1)" class="cellti">
+                    <label>音乐MTV </label>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a  onclick="flashmovie('','jieshuo',1)" class="cellti">
+                    <label>游戏解说 </label>
+                </a>
+            </li>
+
+        </ul>
+
+    <!--侧边vip-->
+    <!--    v-if="show"-->
+    <ul   v-if="showvip"  class="layui-nav layui-nav-tree  pull-left  zheight layui-col-md1" lay-filter="test" th:fragment="cellbar">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a onclick="flashmovie('71',1)" class="cellti">
+                <label>福利片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a onclick="flashmovie('72',1)" class="cellti">
+                <label>美女写真</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('73',1)"  class="cellti">
+                <label>视频秀</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('74',1)" class="cellti">
+                <label>伦理片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('75',1)" class="cellti">
+                <label>展会美女</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('76',1)" class="cellti">
+                <label>主播美女</label>
+            </a>
+        </li>
+    </ul>
+
+
+
+    <!--电影-->
+    <!--    v-if="showce"-->
+    <ul  style="right:12vh;bottom: 25%;top: 20%; " v-if="showce"  @mouseleave="showce=false "  class="layui-nav layui-nav-tree  pull-left  zheight layui-col-md1" lay-filter="test" th:fragment="cellbarce">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a onclick="flashmovie('','21',1)" class="cellti">
+                <label>剧情片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a onclick="flashmovie('','22',1)" class="cellti">
+                <label>动作片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','23',1)" class="cellti">
+                <label>喜剧片</label>
+            </a>
+            <!--                <dl class="layui-nav-child">-->
+            <!--                    <dd><a href="javascript:;">选项1</a></dd>-->
+            <!--                    <dd><a href="javascript:;">选项2</a></dd>-->
+            <!--                    <dd><a href="">选项3</a></dd>-->
+            <!--                </dl>-->
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','24',1)" class="cellti">
+                <label>恐怖片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','25',1)" class="cellti">
+                <label>战争片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','26',1)" class="cellti">
+                <label>爱情片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','27',1)" class="cellti">
+                <label>科幻片</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','28',1)" class="cellti">
+                <label>奇幻片</label>
+            </a>
+        </li>
+    </ul>
+
+    <!--电视剧-->
+    <!--    v-if="showce"-->
+    <ul  style="right:12vh;bottom: 30%;" v-if="showceju"  @mouseleave="showceju=false "  class="layui-nav layui-nav-tree  pull-left  zheight layui-col-md1" lay-filter="test" th:fragment="cellbarce">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','1',1)" class="cellti">
+                <label>台剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','2',1)" class="cellti">
+                <label>国产剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','3',1)" class="cellti">
+                <label>日剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','4',1)" class="cellti">
+                <label>欧美剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','5',1)" class="cellti">
+                <label>泰剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','6',1)" class="cellti">
+                <label>港剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','7',1)" class="cellti">
+                <label>韩剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','8',1)" class="cellti">
+                <label>海外剧</label>
+            </a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a  onclick="flashmovie('','9',1)" class="cellti">
+                <label>美剧</label>
+            </a>
+        </li>
+
+    </ul>
+
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.little.anotherwebuploadtest.mapper.movieMapper">
+<!--    //    通过传入参数获取信息（最新电影或者类型）-->
+<!--    public movieImfo getMovie(@RequestParam("type") String type);-->
+    <select id="getMovie" resultType="com.little.anotherwebuploadtest.bean.movieImfo" parameterType="String">
+        select id,videoname,pic from videoimfo where
+        <choose>
+            <when test="type=='new'">
+                 type	&lt; 70 or type	&gt;= 80
+            </when>
+            <when test="type=='ju'">
+                 type &lt; 10
+            </when>
+            <when test="type=='dongman'">
+                 type &gt;= 10 and type &lt; 20
+            </when>
+            <when test="type=='dianying'">
+                type &gt;= 20 and type &lt; 30
+            </when>
+            <when test="type=='weidy'">
+                type &gt;= 30 and type &lt; 40
+            </when>
+            <when test="type=='jilu'">
+                type &gt;= 40 and type &lt; 50
+            </when>
+            <when test="type=='zongyi'">
+                type &gt;= 50 and type &lt; 60
+            </when>
+            <when test="type=='music'">
+                type &gt;= 60 and type &lt; 70
+            </when>
+            <when test="type=='jieshuo'">
+                type &gt;= 80 and type &lt; 90
+            </when>
+            <otherwise>
+                type = #{type}
+            </otherwise>
+        </choose>
+        ORDER BY id DESC
+    </select>
+
+    <select id="getMovieByName" parameterType="String" resultType="com.little.anotherwebuploadtest.bean.movieImfo">
+        select id,videoname,pic from videoimfo where videoname like CONCAT('%',#{movieName},'%') and  type	&lt; 70 or type	&gt;= 80  ORDER BY id DESC
+    </select>
+
+    <select id="getImfoById" resultType="com.little.anotherwebuploadtest.bean.movieImfo" parameterType="String">
+        select id,videoId,videoname,pic,typeName as type,playUrl
+         from videoimfo inner join typeimfo on videoimfo.type=typeimfo.typeId
+         where id=#{movieid}
+    </select>
+
+    <select id="getvipMovie" resultType="com.little.anotherwebuploadtest.bean.movieImfo">
+        select id,videoname,pic from videoimfo where  type	&gt;= 70 and type &lt; 80  ORDER BY id DESC
+    </select>
+
+    <select id="getvipMovieType" resultType="com.little.anotherwebuploadtest.bean.movieImfo" parameterType="String">
+        select id,videoname,pic from videoimfo where type = #{type} ORDER BY id DESC
+    </select>
+
+</mapper>

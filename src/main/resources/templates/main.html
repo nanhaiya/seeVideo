@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页面</title>
+
+    <script src="/webjars/vue/2.6.11/vue.js"  th:src="@{/webjars/vue/2.6.11/vue.js}"></script>
+    <script src="/webjars/layui/2.5.6/layui.all.js" th:src="@{/webjars/layui/2.5.6/layui.all.js}"></script>
+    <script type="text/javascript" src="/webjars/jquery/3.5.1/jquery.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script type="text/javascript" src="/js/jquery.lazyload.min.js" th:src="@{/js/jquery.lazyload.min.js}"></script>
+    <link href="font-awesome-4.7.0/css/font-awesome.css" th:href="@{/font-awesome-4.7.0/css/font-awesome.css}" rel="stylesheet">
+    <link href="webjars/bootstrap/4.5.3/css/bootstrap.css" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+    <link rel="stylesheet"  th:href="@{/css/index.css}">
+
+    <style>
+        .form-center .username input,.form-center .password input{
+            height: 50px;
+            padding-left: 60px;
+        }
+
+
+        .form-control-feedback {
+            line-height: 50px;
+            left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<div id="app">
+    <div class="row">
+        <div :class="[show?'col-md-2':'']">
+            <transition name="fade">
+                <div th:replace="commons/bar::cellbar"></div>
+            </transition>
+        </div>
+        <div :class="[show?'col-md-2':'']">
+            <transition name="fade">
+                <div th:replace="commons/bar::cellbarce"></div>
+            </transition>
+        </div>
+
+        <div class="topbar">
+            <div th:replace="commons/bar::topbar"></div>
+
+            <div class="show-center">
+
+
+                <!--                分页展示电影-->
+
+<!--                电影卡片-->
+                <div class="mt-2">
+                    <div class="row" id="movieKapian">
+
+<!--                        <div class="card col-lg-2 col-md-3 mt-2 ml-2">-->
+<!--                            <div class="items text-center">-->
+<!--                                <a href="">-->
+<!--                                    <img class="img-responsive" lay-src="https://mahuapic.com/upload/vod/2019-11-01/15725974081.jpg" />-->
+<!--                                </a>-->
+<!--                                -->
+<!--                                <h3>Bootstrap 编码规范</h3>-->
+<!--                                <p>by @mdo</p>-->
+<!--                                <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                    </div>
+                    <div id="fenye" class="fenye"></div>
+                </div>
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+</body>
+
+<script>
+    var sumMovie=100;          //数据总数
+    var limitye=20;             //每页展示数
+    var currentPage=1;          //当前页
+    var movieType="new";        //影视类型
+    var movieList=[];                  //影视
+    var findMovie="";           //查询电影
+    var vue=new Vue({
+        el:'#app',
+        data() {
+            return {
+                show:true,
+                showce:false,
+                showceju:false,
+                searchshow:true,
+                showvip:false
+            };
+        },
+        methods: {
+
+        }
+
+    });
+
+    layui.use(['element'],function(){
+        layui.element.init();//手动调用初始化方法
+    })
+
+
+
+
+    layui.use('flow', function(){
+        var flow = layui.flow;
+        //当你执行这样一个方法时，即对页面中的全部带有lay-src的img元素开启了懒加载（当然你也可以指定相关img）
+        flow.lazyimg();
+    });
+
+    $(function () {
+
+
+        if(movieType==""){
+            flashmovie("","new" ,"1")
+        }else{
+            flashmovie("",movieType,currentPage)
+        }
+
+    })
+
+    $("#searchBtn").keydown(function (e) {
+        var curKey = e.which;
+
+        if (curKey == 13) {
+            movieType=""
+            findMovie=$("#searchBtn").val()
+            flashmovie(findMovie,"",1)
+
+        }
+    })
+
+
+
+    function flashmovie(movieName,type,nextpage){
+        movieType=type;
+        if (type!=""){
+            $.get("/movie/getMovie",{"type":type,"pn":nextpage},function (success) {
+                sumMovie=success.pageinfo.total
+                currentPage=success.pageinfo.pageNum
+                movieList=success.pageinfo.list
+                reflashMovie()
+            })
+        }else if (movieName!=""){
+            $.get("/movie/getMovieByName",{"movieName":movieName,"pn":nextpage},function (success) {
+                sumMovie=success.pageinfo.total
+                currentPage=success.pageinfo.pageNum
+                movieList=success.pageinfo.list
+                reflashMovie()
+            })
+        }
+
+    }
+
+
+    function reflashMovie() {
+        //刷新界面
+        $("#movieKapian").empty();
+        for(var i in movieList){
+            $("#movieKapian").append($("<div class=\"card col-lg-2 col-md-5 mt-2 ml-2 lazy\">\n" +
+                "                            <div class=\"items text-center\">\n" +
+                "                            <a href='/movie/getImfo/"+movieList[i].id+"'  onclick=\"window.open(this.href);return false\">\n" +
+                //     onerror="this.lay-src='/image/loaddg.jpg'"
+                "                                <img class=\"img-responsive center-block\"    src=\""+movieList[i].pic+"\"  onerror=\"this.src='/image/errorimg.jpg'\"/>\n" +
+                "                            </a>\n" +
+                "                                <p class='zitishibody'>"+movieList[i].videoname+"</p>\n" +
+                "                            </a>\n" +
+                "                        </div>"));
+        }
+
+
+        layui.use('laypage', function(){
+            var laypage = layui.laypage;
+
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'fenye' //注意，这里的 test1 是 ID，不用加 # 号
+                ,count: sumMovie, //数据总数，从服务端得到
+                limit:limitye,
+                curr:currentPage,
+                jump:function (obj,first) {
+                    if(!first){
+                        currentPage=obj.curr
+                        if(movieType!=""){
+                            flashmovie("",movieType,currentPage)
+
+                        }else{
+                            flashmovie(findMovie,"",currentPage)
+                        }
+
+                    }
+                }
+            });
+        });
+    }
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <script type="text/javascript" src="/webjars/jquery/3.5.1/jquery.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script src="/webjars/layui/2.5.6/layui.all.js" th:src="@{/webjars/layui/2.5.6/layui.all.js}"></script>
+    <script src="/webjars/bootstrap/4.5.3/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
+    <script src="/webjars/bootstrap/4.5.3/js/bootstrap.bundle.min.js" th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.bundle.min.js}"></script>
+    <link href="/webjars/bootstrap/4.5.3/css/bootstrap.css" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css}" rel="stylesheet">
+    <link href="/font-awesome-4.7.0/css/font-awesome.css" th:href="@{/font-awesome-4.7.0/css/font-awesome.css}" rel="stylesheet">
+    <link href="/webjars/bootstrap/4.5.3/css/bootstrap.css" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+     <link rel="stylesheet"  th:href="@{/css/default.css}">
+</head>
+
+<body>
+<form class="form-signin" action="/login" th:action="@{/login}" method="post">
+<div class="page login-page">
+        <div class="container d-flex align-items-center">
+             <div class="form-holder has-shadow">
+                <div class="row">
+                    <!-- Logo & Information Panel-->
+                    <div class="col-lg-6">
+                        <div class="info d-flex align-items-center">
+                            <div class="content">
+                                <div class="logo">
+                                    <h1>欢迎登陆</h1>
+                                </div>
+                                <p>还没决定好干什么的网站的登录界面</p>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Form Panel    -->
+                        <div class="col-lg-6 bg-white">
+                            <div class="form d-flex align-items-center">
+                                <div class="content">
+                                    <div class="form-group">
+                                        <input type="hidden" id="messagehide" th:value="code==null?'':${message}">
+                                        <input id="username" class="input-material" type="text" name="name" placeholder="ID | 密码 | 邮箱" th:placeholder="'ID | 密码 | 邮箱'" >
+                                            <div id="usernameti" class="invalid-feedback">
+                                                用户名不能为空
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input id="userpwd" class="input-material" type="password" name="pwd" placeholder="请输入密码" th:placeholder="请输入密码">
+                                        <div id="userpwdti" class="invalid-feedback">
+                                            密码不能为空
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 otherMethod">
+                                        <small>其他方式:</small>
+                                        <a href="https://github.com/login/oauth/authorize?client_id=613eb62c9cbcfb5cda5b&redirect_uri=http://localhost:8080/callback&scope=user&state=1" >
+                                            <i class="fa fa-github fa-lg"></i>github </a>
+                                        <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101925476&redirect_uri=http://192.168.180.12:8080/qqcallback&state=1" >
+                                            <i class="fa fa-qq fa-lg"></i>QQ</a>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button id="regbtn" type="button" name="registerSubmit" class="btn btn-primary">登陆</button>
+                                    </div>
+                                    <small>没有账号?</small><a href="/regist/Regist" class="signup">&nbsp;注册</a><br>
+                                    <small>返回主界面</small><a href="/panel.html" class="signup">&nbsp;主界面</a>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+<!-- JavaScript files-->
+<script>
+    $(function(){
+        var messagehide=$("#messagehide").val()
+        if(messagehide!=""){
+            $('#usernameti').text(messagehide);
+            $("#username").removeClass("form-control is-valid")
+            $("#username").addClass("form-control is-invalid");
+            $('#userpwdti').text(messagehide);
+            $("#userpwd").removeClass("form-control is-valid");
+            $("#userpwd").addClass("form-control is-invalid");
+
+        }
+
+
+        /*var flagName=false;     //用户名
+        var flagPas=false;      //密码*/
+        $("#regbtn").click(function(){
+            var username=$("#username").val();      //用户名
+            var pwd=$("#userpwd").val();        //密码
+            var flagName=false;     //用户名
+            var flagPas=false;      //密码
+
+            if (pwd==""){
+                flagPas=false;
+                $('#userpwdti').text("请输入密码");
+                $("#userpwd").removeClass("form-control is-valid");
+                $("#userpwd").addClass("form-control is-invalid");
+            }else {
+                flagPas=true;
+                $("#userpwd").removeClass("form-control is-invalid")
+                $("#userpwd").addClass("form-control is-valid");
+
+            }
+
+            if(username==""){
+                //非空
+                $('#usernameti').text("用户名不能为空");
+                $("#username").removeClass("form-control is-valid")
+                $("#username").addClass("form-control is-invalid");
+
+                flagName=false;
+
+            }else {
+                $("#username").removeClass("form-control is-invalid")
+                $("#username").addClass("form-control is-valid");
+                flagName=true;
+            }
+
+
+
+            if(flagName&&flagPas){
+                $.post("/login",{"name":username,"pwd":pwd},function (success) {
+                    console.log(success['code'])
+                    if(success["code"]!=1){
+                        $('#usernameti').text(success['message']);
+                        $("#username").removeClass("form-control is-valid")
+                        $("#username").addClass("form-control is-invalid");
+                        $('#userpwdti').text(success['message']);
+                        $("#userpwd").removeClass("form-control is-valid");
+                        $("#userpwd").addClass("form-control is-invalid");
+                    }else{
+                        $('#usernameti').text(success['message']);
+                        $("#username").removeClass("form-control is-invalid")
+                        $("#username").addClass("form-control is-valid");
+                        $('#userpwdti').text(success['message']);
+                        $("#userpwd").removeClass("form-control is-invalid");
+                        $("#userpwd").addClass("form-control is-valid");
+                        $(location).attr('href', '/panel.html');
+                    }
+                })
+            }
+        });
+    })
+
+    layui.use(['element'],function(){
+        layui.element.init();//手动调用初始化方法
+    })
+</script>
+</body>
+
+</html>
