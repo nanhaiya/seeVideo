@@ -1,6 +1,8 @@
 package com.little.anotherwebuploadtest.tool;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -16,14 +18,14 @@ import java.util.Properties;
  * @date 2020-12-22 11:54
  */
 
-
+@Component
 public class tool {
 
     @Value("${mail.addr}")
-    public String addr;
+    private String addr;
 
     @Value("${mail.code}")
-    public String code;
+    private String code;
 
 
     public void sengmail(String tittle,String value,String sendto) throws MessagingException {
@@ -34,6 +36,7 @@ public class tool {
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.ssl.enable", "true");//设置是否使用ssl安全连接 ---一般都使用
         properties.put("mail.debug", "true");//设置是否显示debug信息 true 会在控制台显示相关信息
+        properties.put("mail.smtp.starttls.enable", "true");
         //得到回话对象
         Session session = Session.getInstance(properties);
         // 获取邮件对象
@@ -49,6 +52,7 @@ public class tool {
         //得到邮差对象
         Transport transport = session.getTransport();
         //连接自己的邮箱账户
+        System.out.println(addr+code);
         transport.connect(addr, code);//密码为刚才得到的授权码
         transport.sendMessage(message, message.getAllRecipients());
     }

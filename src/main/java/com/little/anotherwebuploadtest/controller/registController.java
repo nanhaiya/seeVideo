@@ -29,6 +29,9 @@ public class registController {
     @Autowired
     loginMapper loginMapper;
 
+    @Autowired
+    tool tool;
+
 
     //跳转注册
     @RequestMapping("/Regist")
@@ -58,7 +61,6 @@ public class registController {
     public int sendmail(@RequestParam("sendto") String sendto,
                         HttpSession session) throws MessagingException {
         int flagsend=1;
-        tool tool=new tool();
        // String tittle,String value,String sendto
         String title="【测试程序】注册验证";
         Random rd=new Random();

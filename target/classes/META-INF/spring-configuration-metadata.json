@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "name": "spring.datasource",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.little.anotherwebuploadtest.config.druidconfig",
+      "sourceMethod": "druid()"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}

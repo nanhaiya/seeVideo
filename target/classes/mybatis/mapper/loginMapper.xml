@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.little.anotherwebuploadtest.mapper.loginMapper">
+
+<!--    public int userload(usermainimfo usermainimfo);-->
+    <select id="userLogin" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from usermainimfo where
+         <choose>
+             <when test="lei=='id'.toString()">
+                 id=#{username} and  pwd=#{pwd};
+             </when>
+             <when test="lei=='mail'.toString()">
+                 mail=#{username} and  pwd=#{pwd};
+             </when>
+            <when test="lei=='user'.toString()">
+                user=#{username} and  pwd=#{pwd};
+            </when>
+            <otherwise>
+                1=0;
+            </otherwise>
+         </choose>
+    </select>
+
+    <select id="getuserImfo" resultType="com.little.anotherwebuploadtest.bean.usermainimfo" parameterType="String">
+        select * from usermainimfo where
+        <choose>
+            <when test="lei=='id'.toString()">
+                id=#{username} and  pwd=#{pwd};
+            </when>
+            <when test="lei=='mail'.toString()">
+                mail=#{username} and  pwd=#{pwd};
+            </when>
+            <when test="lei=='user'.toString()">
+                user=#{username} and  pwd=#{pwd};
+            </when>
+            <otherwise>
+                1=0;
+            </otherwise>
+        </choose>
+    </select>
+
+<!--    //判断是否存在用户-->
+    <select id="ifuserCun" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from usermainimfo where user=#{username}
+    </select>
+
+<!--    ////注册账户-->
+    <select id="registUser" resultType="java.lang.Integer" parameterType="String">
+        select insertuser(#{username},#{pwd},#{mail});
+    </select>
+
+<!--    //判定邮箱是否被绑定-->
+    <select id="flogMailBadng" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from usermainimfo where mail=#{mail};
+    </select>
+
+<!--    //绑定github账户-->
+    <update id="bangGithub">
+        update usermainimfo set githubBangId=(select githubBangId from githubimfo where githubId=#{githubBangId}) where user=#{user};
+    </update>
+
+</mapper>

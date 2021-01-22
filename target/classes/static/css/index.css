@@ -1,0 +1,97 @@
+* {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+.topbar{
+    width: 100%;
+    position: sticky;
+/*// 兼容 -webkit 内核的浏览器*/
+    position: -webkit-sticky;
+    /*// 必须设一个值，否则不生效*/
+    top: 0px;
+    z-index: 99;
+}
+.topbar .search{
+    width: calc( 75% ) ;
+    margin-left: calc( 12.5% );
+    margin-top: 10px;
+    padding-left: 2vh;
+    z-index: 100;
+}
+
+
+.zheight{
+    z-index: 999;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .6s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+    opacity: 0
+}
+
+.sidebar{
+    height: 100%;
+}
+
+.zheight{
+    position: fixed;
+    top: 10%;
+    bottom: 20%;
+    right: 0;
+    overflow-x: hidden;
+}
+
+.show-center{
+    margin-left: 2%;
+}
+.img-responsive{
+    /*width: 200px;*/
+    /*height: 300px;*/
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+.fenye{
+    margin-left: 30%;
+}
+
+.zitishibody{
+    font-size:3vh
+}
+.zitishititle{
+    font-size:4vh;
+    color:#009688;
+    margin-bottom: 3vh;
+    margin-top: 3vh;
+}
+.layui-nav-item{
+    height:5vh;
+}
+.layui-nav-tree{
+    width: 12vh;
+}
+.layui-nav-item li{
+    height:12vh;
+}
+.layui-nav-item a{
+    font-size:3vh;
+}
+.zheight a{
+    margin-top: 1vh;
+}
+
+.layui-nav-tree .layui-nav-item a{
+    height: 5vh;
+}
+
+.layui-nav-item label{
+    font-size:2vh;
+    height:5vh;
+    width: 12vh;
+}
+
+.videowidth{
+    height: 70vh;
+}

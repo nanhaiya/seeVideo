@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>影视播放</title>
+    <script src="/webjars/vue/2.6.11/vue.js"  th:src="@{/webjars/vue/2.6.11/vue.js}"></script>
+    <script src="/webjars/layui/2.5.6/layui.all.js" th:src="@{/webjars/layui/2.5.6/layui.all.js}"></script>
+    <script type="text/javascript" src="/webjars/jquery/3.5.1/jquery.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script type="text/javascript" src="/js/jquery.lazyload.min.js" th:src="@{/js/jquery.lazyload.min.js}"></script>
+    <link href="font-awesome-4.7.0/css/font-awesome.css" th:href="@{/font-awesome-4.7.0/css/font-awesome.css}" rel="stylesheet">
+    <link href="webjars/bootstrap/4.5.3/css/bootstrap.css" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.5.6/css/layui.css}">
+    <link rel="stylesheet"  th:href="@{/css/index.css}">
+    <link rel="stylesheet" href="/webjars/video-js/7.1.0/video-js.min.css" th:href="@{/webjars/video-js/7.1.0/video-js.min.css}">
+    <style>
+        .video-js .vjs-big-play-button{
+            font-size: 2.5em;
+            line-height: 2.3em;
+            height: 2.5em;
+            width: 2.5em;
+            -webkit-border-radius: 2.5em;
+            -moz-border-radius: 2.5em;
+            border-radius: 2.5em;
+            background-color: #73859f;
+            background-color: rgba(115,133,159,.5);
+            border-width: 0.15em;
+            margin-top: -1.25em;
+            margin-left: -1.75em;
+        }
+        /* 中间的播放箭头 */
+        .vjs-big-play-button .vjs-icon-placeholder {
+            font-size: 1.63em;
+        }
+        /* 加载圆圈 */
+        .vjs-loading-spinner {
+            font-size: 2.5em;
+            width: 2em;
+            height: 2em;
+            border-radius: 1em;
+            margin-top: -1em;
+            margin-left: -1.5em;
+        }
+        /*.video-center{*/
+        /*    margin-left: 15%;*/
+        /*    margin-top: 3%;*/
+        /*}*/
+        .vertical-text{
+            float: left;
+            -webkit-writing-mode: vertical-rl;
+            writing-mode: vertical-rl;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<div id="app">
+    <div class="layui-row align-content-md-center">
+        <div class="topbar">
+            <div th:replace="commons/bar::topbar"></div>
+        </div>
+        <div class="row col-lg-12 col-sm-12 col-md-12">
+            <div class="col-lg-2 col-sm-0 col-md-0">
+                <h2 class=" zitishibody">广告位招租</h2>
+            </div>
+            <div class="video-center col-lg-10 col-sm-12 col-md-12">
+                <h1 class="zitishititle">『 [[${name}]] 』</h1>
+                <!--            v-bind:width="width" v-bind:height="height"-->
+                <video id="videoPlay"  class="video-js vjs-big-play-centered col-lg-10 col-sm-12 col-md-12 videowidth" poster="">
+                    <source th:src="${url}" type="application/x-mpegURL" id="target">
+                </video>
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <label style="color:#009688">SPACE</label> 播放/暂停 ; <i class="fa fa-long-arrow-up fa-1x" style="color:#009688"></i> 增大音量 ； <i class="fa fa-long-arrow-down fa-1x" style="color:#009688"></i> 减少音量 ；
+                        <i class="fa fa-long-arrow-left fa-1x" style="color:#009688"></i> 快退 ； <i class="fa fa-long-arrow-right fa-1x" style="color:#009688"></i> 快退
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+
+<script src="/webjars/video-js/7.1.0/video.min.js" th:src="@{/webjars/video-js/7.1.0/video.min.js}"></script>
+<script src="/js/videojs-contrib-hls.js" th:src="@{/js/videojs-contrib-hls.js}"></script>
+<script>
+
+
+    var vue=new Vue({
+        el:'#app',
+        data() {
+            return {
+                show:false,
+                width:window.innerWidth*0.6,
+                searchshow:false,
+            };
+        },
+        methods: {
+
+        }
+
+    });
+
+
+
+    layui.use(['element'],function(){
+        layui.element.init();//手动调用初始化方法
+    })
+
+    var player =new videojs('videoPlay',{ "poster": "", "controls": "true" });
+
+    $(function () {
+        var vol = 0.1;  //1代表100%音量，每次增减0.1
+        var time = 10; //单位秒，每次增减10秒
+        document.onkeydown = function(e){
+            //播放暂停
+            if(e && e.keyCode==32){
+                player.paused() === true ? player.play() : player.pause();
+                return false;
+           } else if (e && e.keyCode === 37) {
+               // 按 向左键
+                var nowtime = player.currentTime();
+                player.currentTime() > 0 ? player.currentTime(nowtime-= time) : 1;
+               //  return false;
+           } else if (e && e.keyCode === 39) {
+               // 按 向右键
+                var nowtime = player.currentTime();
+                player.volume() !== player.duration() ? player.currentTime(nowtime+= time)  : 1;
+                return false;
+           }else  if (e && e.keyCode === 38) {
+                //鼠标上下键控制视频音量
+                // 按 向上键
+                var newvol=player.volume();
+                player.volume() !== 1 ? player.volume(newvol+= vol)  : 1;
+                return false;
+
+            } else if (e && e.keyCode === 40) {
+                // 按 向下键
+                var newvol=player.volume();
+                player.volume() !== 0 ? player.volume(newvol-= vol)  : 1;
+                return false;
+            }
+        }
+
+
+    });
+
+</script>
+
+</html>

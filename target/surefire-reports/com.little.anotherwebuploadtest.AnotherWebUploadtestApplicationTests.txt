@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.little.anotherwebuploadtest.AnotherWebUploadtestApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.56 s - in com.little.anotherwebuploadtest.AnotherWebUploadtestApplicationTests
